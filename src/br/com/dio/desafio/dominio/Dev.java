@@ -3,75 +3,75 @@ package br.com.dio.desafio.dominio;
 import java.util.*;
 
 public class Dev {
+
+    private static long contadorId = 1;
+
+    private final long id;
     private String nome;
-    private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
-    private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+    private final Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
+    private final Set<Conteudo> conteudosConcluidos = new HashSet<>();
 
-    public void inscreverBootcamp(Bootcamp bootcamp){
-        this.conteudosInscritos.addAll(bootcamp.getConteudos());
-        bootcamp.getDevsInscritos().add(this);
-    }
-
-    public void progredir() {
-        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
-        if(conteudo.isPresent()) {
-            this.conteudosConcluidos.add(conteudo.get());
-            this.conteudosInscritos.remove(conteudo.get());
-        } else {
-            System.err.println("Você não está matriculado em nenhum conteúdo!");
-        }
-    }
-
-    public double calcularTotalXp() {
-        Iterator<Conteudo> iterator = this.conteudosConcluidos.iterator();
-        double soma = 0;
-        while(iterator.hasNext()){
-            double next = iterator.next().calcularXp();
-            soma += next;
-        }
-        return soma;
-
-        /*return this.conteudosConcluidos
-                .stream()
-                .mapToDouble(Conteudo::calcularXp)
-                .sum();*/
-    }
-
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public Dev(String nome) {
+        this.id = contadorId++;
         this.nome = nome;
     }
 
-    public Set<Conteudo> getConteudosInscritos() {
-        return conteudosInscritos;
+    public void adicionarConteudos(Set<Conteudo> conteudos){
+        for (Conteudo conteudo : conteudos) {
+            if (conteudosConcluidos.contains(conteudo)) continue;
+
+            conteudosInscritos.add(conteudo);
+        }
     }
 
-    public void setConteudosInscritos(Set<Conteudo> conteudosInscritos) {
-        this.conteudosInscritos = conteudosInscritos;
+    public void progredir() {
+        conteudosInscritos.stream()
+                .findFirst()
+                .ifPresentOrElse(
+                        this::concluirConteudo,
+                        () -> System.err.println("Você não está matriculado em nenhum conteúdo!")
+                );
     }
 
-    public Set<Conteudo> getConteudosConcluidos() {
-        return conteudosConcluidos;
+    private void concluirConteudo(Conteudo conteudo){
+        conteudosConcluidos.add(conteudo);
+        conteudosInscritos.remove(conteudo);
     }
 
-    public void setConteudosConcluidos(Set<Conteudo> conteudosConcluidos) {
-        this.conteudosConcluidos = conteudosConcluidos;
+    public double calcularTotalXp() {
+        double soma = 0;
+
+        for (Conteudo conteudo : conteudosConcluidos) soma += conteudo.calcularXp();
+
+        return soma;
+    }
+
+    public long getId() { return id; }
+    public String getNome() { return nome; }
+    public Set<Conteudo> getConteudosInscritos() { return Collections.unmodifiableSet(conteudosInscritos); }
+    public Set<Conteudo> getConteudosConcluidos() { return Collections.unmodifiableSet(conteudosConcluidos); }
+
+    public void setNome(String nome) { this.nome = nome; }
+
+    @Override
+    public String toString() {
+        return "Dev{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", conteudosInscritos=" + conteudosInscritos +
+                ", conteudosConcluidos=" + conteudosConcluidos +
+                '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Dev dev = (Dev) o;
-        return Objects.equals(nome, dev.nome) && Objects.equals(conteudosInscritos, dev.conteudosInscritos) && Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
+        if (!(o instanceof Dev dev)) return false;
+        return id == dev.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, conteudosInscritos, conteudosConcluidos);
+        return Objects.hashCode(id);
     }
+
 }

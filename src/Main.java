@@ -1,62 +1,71 @@
-import br.com.dio.desafio.dominio.Bootcamp;
-import br.com.dio.desafio.dominio.Curso;
-import br.com.dio.desafio.dominio.Dev;
-import br.com.dio.desafio.dominio.Mentoria;
-
-import java.time.LocalDate;
+import br.com.dio.desafio.dominio.*;
 
 public class Main {
     public static void main(String[] args) {
-        Curso curso1 = new Curso();
-        curso1.setTitulo("curso java");
-        curso1.setDescricao("descrição curso java");
-        curso1.setCargaHoraria(8);
 
-        Curso curso2 = new Curso();
-        curso2.setTitulo("curso js");
-        curso2.setDescricao("descrição curso js");
-        curso2.setCargaHoraria(4);
+        Bootcamp bootcamp1 = new Bootcamp("Backend Alma Viva", "Java para Backend", 60);
+        Bootcamp bootcamp2 = new Bootcamp("Backend Goblant", "Java para Backend");
 
-        Mentoria mentoria = new Mentoria();
-        mentoria.setTitulo("mentoria de java");
-        mentoria.setDescricao("descrição mentoria java");
-        mentoria.setData(LocalDate.now());
+        Conteudo conteudo1 = new Mentoria("Apresentação", "Apresentação do Bootcamp Backend Alma Viva", "01/06/2026 20:00");
+        Conteudo conteudo2 = new Mentoria("Apresentação", "Apresentação do Bootcamp Backend Goblant", "08/06/2026 21:00");
+        Conteudo conteudo3 = new Curso("Fundamentos", "Fundamentos de Java", 6);
+        Conteudo conteudo4 = new Curso("Spring", "FrameWork Spring", 5);
+        Conteudo conteudo5 = new Curso("SpringBoot", "SpringBoot", 7);
 
-        /*System.out.println(curso1);
-        System.out.println(curso2);
-        System.out.println(mentoria);*/
+        bootcamp1.adicionarConteudo(conteudo1);
+        bootcamp1.adicionarConteudo(conteudo3);
+        bootcamp1.adicionarConteudo(conteudo4);
+        bootcamp1.adicionarConteudo(conteudo5);
 
-        Bootcamp bootcamp = new Bootcamp();
-        bootcamp.setNome("Bootcamp Java Developer");
-        bootcamp.setDescricao("Descrição Bootcamp Java Developer");
-        bootcamp.getConteudos().add(curso1);
-        bootcamp.getConteudos().add(curso2);
-        bootcamp.getConteudos().add(mentoria);
+        bootcamp2.adicionarConteudo(conteudo2);
+        bootcamp2.adicionarConteudo(conteudo3);
+        bootcamp2.adicionarConteudo(conteudo4);
 
-        Dev devCamila = new Dev();
-        devCamila.setNome("Camila");
-        devCamila.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        devCamila.progredir();
-        devCamila.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        System.out.println("Conteúdos Concluídos Camila:" + devCamila.getConteudosConcluidos());
-        System.out.println("XP:" + devCamila.calcularTotalXp());
+        Dev dev1 = new Dev("Matheus");
+        Dev dev2 = new Dev("Kayky");
+        Dev dev3 = new Dev("Carlos");
 
-        System.out.println("-------");
+        bootcamp1.inscreverDev(dev1);
+        bootcamp1.inscreverDev(dev2);
+        bootcamp2.inscreverDev(dev3);
 
-        Dev devJoao = new Dev();
-        devJoao.setNome("Joao");
-        devJoao.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        devJoao.progredir();
-        devJoao.progredir();
-        devJoao.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        System.out.println("Conteúdos Concluidos João:" + devJoao.getConteudosConcluidos());
-        System.out.println("XP:" + devJoao.calcularTotalXp());
+        System.out.println(bootcamp1.getDevsInscritos());
+        System.out.println("=======");
+        System.out.println(bootcamp2.getDevsInscritos());
+
+        dev1.progredir();
+        dev2.progredir();
+        dev3.progredir();
+        System.out.println(dev1);
+        System.out.println(dev2);
+        System.out.println(dev3);
+
+        System.out.println("=======");
+
+        dev1.progredir();
+        dev2.progredir();
+        System.out.println(dev1);
+        System.out.println(dev2);
+
+        System.out.println("=======");
+
+        dev1.progredir();
+        System.out.println(dev1);
+
+        System.out.println("=======");
+
+        dev1.progredir();
+        System.out.println(dev1);
+
+        System.out.println("=======");
+
+        bootcamp2.inscreverDev(dev1);
+        System.out.println(dev1);
+
+        System.out.println("=======");
+
+        dev1.progredir();
+        System.out.println(dev1);
 
     }
 

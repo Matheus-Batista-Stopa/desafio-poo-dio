@@ -1,33 +1,38 @@
 package br.com.dio.desafio.dominio;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
-public class Mentoria extends Conteudo{
+public final class Mentoria extends Conteudo{
 
-    private LocalDate data;
+    private OffsetDateTime data;
+
+    public Mentoria(String titulo, String descricao, String dataString) {
+        super(titulo, descricao);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        LocalDateTime localDateTime = LocalDateTime.parse(dataString, formatter);
+
+        this.data = localDateTime.atZone(ZoneId.systemDefault()).toOffsetDateTime();
+    }
 
     @Override
-    public double calcularXp() {
-        return XP_PADRAO + 20d;
-    }
+    public double calcularXp() { return XP_PADRAO + 20; }
 
-    public Mentoria() {
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
+    public OffsetDateTime getData() { return data; }
+    public void setData(OffsetDateTime data) { this.data = data; }
 
     @Override
     public String toString() {
         return "Mentoria{" +
-                "titulo='" + getTitulo() + '\'' +
+                "id=" + getId() +
+                ", titulo='" + getTitulo() + '\'' +
                 ", descricao='" + getDescricao() + '\'' +
                 ", data=" + data +
                 '}';
     }
+
 }

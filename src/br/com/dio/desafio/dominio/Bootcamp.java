@@ -1,70 +1,59 @@
 package br.com.dio.desafio.dominio;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.OffsetDateTime;
+import java.util.*;
 
 public class Bootcamp {
+
+    protected static final int DURACAO_PADRAO = 45;
+    private static long contadorId = 1;
+
+    private final long id;
     private String nome;
     private String descricao;
-    private final LocalDate dataInicial = LocalDate.now();
-    private final LocalDate dataFinal = dataInicial.plusDays(45);
-    private Set<Dev> devsInscritos = new HashSet<>();
-    private Set<Conteudo> conteudos = new LinkedHashSet<>();
+    private final OffsetDateTime dataInicial = OffsetDateTime.now();
+    private final OffsetDateTime dataFinal;
+    private final Set<Conteudo> conteudos = new LinkedHashSet<>();
+    private final Set<Dev> devsInscritos = new HashSet<>();
 
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public Bootcamp(String nome, String descricao) {
+        this.id = contadorId++;
         this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
         this.descricao = descricao;
+        this.dataFinal = dataInicial.plusDays(DURACAO_PADRAO);
     }
 
-    public LocalDate getDataInicial() {
-        return dataInicial;
+    public Bootcamp(String nome, String descricao, int duracao) {
+        this.id = contadorId++;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.dataFinal = dataInicial.plusDays(duracao);
     }
 
-    public LocalDate getDataFinal() {
-        return dataFinal;
-    }
+    public void inscreverDev(Dev dev){ if (devsInscritos.add(dev)) dev.adicionarConteudos(conteudos); }
 
-    public Set<Dev> getDevsInscritos() {
-        return devsInscritos;
-    }
+    public void adicionarConteudo(Conteudo conteudo){ conteudos.add(conteudo); }
 
-    public void setDevsInscritos(Set<Dev> devsInscritos) {
-        this.devsInscritos = devsInscritos;
-    }
+    public long getId() { return id; }
+    public String getNome() { return nome; }
+    public String getDescricao() { return descricao; }
+    public OffsetDateTime getDataInicial() { return dataInicial; }
+    public OffsetDateTime getDataFinal() { return dataFinal; }
+    public Set<Conteudo> getConteudos() { return Collections.unmodifiableSet(conteudos); }
+    public Set<Dev> getDevsInscritos() { return Collections.unmodifiableSet(devsInscritos); }
 
-    public Set<Conteudo> getConteudos() {
-        return conteudos;
-    }
-
-    public void setConteudos(Set<Conteudo> conteudos) {
-        this.conteudos = conteudos;
-    }
+    public void setNome(String nome) { this.nome = nome; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bootcamp bootcamp = (Bootcamp) o;
-        return Objects.equals(nome, bootcamp.nome) && Objects.equals(descricao, bootcamp.descricao) && Objects.equals(dataInicial, bootcamp.dataInicial) && Objects.equals(dataFinal, bootcamp.dataFinal) && Objects.equals(devsInscritos, bootcamp.devsInscritos) && Objects.equals(conteudos, bootcamp.conteudos);
+        if (!(o instanceof Bootcamp bootcamp)) return false;
+        return id == bootcamp.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, descricao, dataInicial, dataFinal, devsInscritos, conteudos);
+        return Objects.hashCode(id);
     }
+
 }
